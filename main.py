@@ -33,3 +33,41 @@ def run_cli(algorithm: str, json_path: str):
 
     metrics = solver.run(algorithm=algorithm)
     print(metrics.summary())
+
+def run_gui(json_path: str):
+    """Lanza la interfaz gráfica."""
+    from ui.interface import launch
+
+    launch(json_path)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Escape Room Solver — IA Búsqueda Informada y No Informada"
+    )
+    parser.add_argument(
+        "--cli",
+        metavar="ALGO",
+        choices=["BFS", "DFS", "UCS"],
+        help="Ejecutar en modo consola con el algoritmo indicado (BFS/DFS/UCS)",
+    )
+    parser.add_argument(
+        "--json",
+        metavar="PATH",
+        default=DEFAULT_JSON,
+        help="Ruta al archivo JSON del escape room (default: data/escape_room.json)",
+    )
+    args = parser.parse_args()
+
+    if not os.path.exists(args.json):
+        print(f"❌ Archivo no encontrado: {args.json}")
+        sys.exit(1)
+
+    if args.cli:
+        run_cli(args.cli, args.json)
+    else:
+        run_gui(args.json)
+
+
+if __name__ == "__main__":
+    main()
